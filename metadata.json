@@ -1,0 +1,5 @@
+{
+  "name": "broker VIP4",
+  "description": "A frontend simulation of a professional broker trading platform, featuring a login/registration system and a member dashboard with deposit, withdrawal, and transaction history. All backend functionalities like user authentication, transaction processing, and data persistence are simulated client-side using local storage for demonstration purposes. This application requires a robust backend for production use, which is beyond the scope of this frontend-only implementation.",
+  "requestFramePermissions": []
+}
