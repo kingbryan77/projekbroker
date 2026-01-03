@@ -1,8 +1,6 @@
-
 import { User, UserProfileUpdate } from '../types';
 import { supabase } from './supabaseClient';
 
-// Mapping function to convert DB profile to App User
 const mapProfileToUser = (profile: any, authUser: any): User => {
   return {
     id: authUser.id,
@@ -20,40 +18,38 @@ const mapProfileToUser = (profile: any, authUser: any): User => {
 
 export const register = async (userData: Omit<User, 'id' | 'username' | 'isAdmin' | 'isVerified' | 'balance' | 'notifications' | 'profilePictureUrl'> & { password: string }): Promise<User | null> => {
   try {
-    // 1. Sign up with Supabase Auth
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email: userData.email,
       password: userData.password,
     });
 
     if (authError || !authData.user) {
-      console.error('Registration auth error:', authError?.message || JSON.stringify(authError));
+      console.error('Registration auth error:', authError?.message);
       return null;
     }
 
     const userId = authData.user.id;
     const username = userData.email.split('@')[0].toLowerCase();
 
-    // 2. Create Profile in 'profiles' table
     const { data: profileData, error: profileError } = await supabase
       .from('profiles')
       .insert([
         {
           id: userId,
-          email: userData.email, // PENTING: Simpan email ke profil
+          email: userData.email,
           full_name: userData.fullName,
           username: username,
           phone_number: userData.phoneNumber,
           is_admin: false,
           is_verified: false,
-          balance: 13000000, // Default balance
+          balance: 13000000,
         }
       ])
       .select()
       .single();
 
     if (profileError) {
-      console.error('Registration profile error:', profileError?.message || JSON.stringify(profileError));
+      console.error('Registration profile error:', profileError?.message);
       return null;
     }
 
@@ -66,7 +62,6 @@ export const register = async (userData: Omit<User, 'id' | 'username' | 'isAdmin
 
 export const adminCreateUser = async (userData: Omit<User, 'id' | 'username' | 'notifications'> & { password: string }): Promise<User | null> => {
   try {
-    // Reuse existing signUp logic for mock/supabase
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email: userData.email,
       password: userData.password,
@@ -82,7 +77,7 @@ export const adminCreateUser = async (userData: Omit<User, 'id' | 'username' | '
       .insert([
         {
           id: userId,
-          email: userData.email, // PENTING: Simpan email ke profil agar bisa login
+          email: userData.email,
           full_name: userData.fullName,
           username: username,
           phone_number: userData.phoneNumber,
@@ -111,7 +106,7 @@ export const login = async (identifier: string, passwordAttempt: string): Promis
     });
 
     if (authError || !authData.user) {
-      console.error('Login error:', authError?.message || JSON.stringify(authError));
+      console.error('Login error:', authError?.message);
       return null;
     }
 
@@ -122,7 +117,7 @@ export const login = async (identifier: string, passwordAttempt: string): Promis
       .single();
 
     if (profileError) {
-      console.error('Profile fetch error:', profileError?.message || JSON.stringify(profileError));
+      console.error('Profile fetch error:', profileError?.message);
       return null;
     }
 
@@ -150,7 +145,6 @@ export const getCurrentUser = async (): Promise<User | null> => {
 
   if (!profileData) return null;
 
-  // Load notifications separately
   const { data: notifs } = await supabase
     .from('notifications')
     .select('*')
@@ -164,7 +158,6 @@ export const getCurrentUser = async (): Promise<User | null> => {
 };
 
 export const verifyEmail = async (email: string): Promise<boolean> => {
-  console.log(`Verification email sent to ${email} (Simulated by Supabase flow)`);
   return true;
 };
 
@@ -200,7 +193,7 @@ export const getAllUsers = async (): Promise<User[]> => {
     .select('*');
 
   if (error) {
-    console.error("Error fetching all users", error?.message || JSON.stringify(error));
+    console.error("Error fetching all users", error?.message);
     return [];
   }
   
