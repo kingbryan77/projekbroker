@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User } from '../../types';
@@ -80,16 +81,16 @@ const RegisterForm: React.FC = () => {
       {/* Logo Section */}
       <div className="flex flex-col items-center mb-6">
         <div className="w-16 h-16 mb-2 relative">
-           <img src="/logo.png" alt="FOREXimf Logo" className="w-full h-full object-contain drop-shadow-lg" />
+           <img src="/logo-28.png" alt="FOREXimf Logo" className="w-full h-full object-contain drop-shadow-lg filter brightness-110" />
         </div>
-        <h1 className="text-xl font-bold text-white tracking-wide">FOREXimf</h1>
-        <p className="text-gray-400 text-[9px] tracking-[0.2em] font-medium uppercase">TRADING LIKE A PRO</p>
+        <h1 className="text-2xl font-black text-white tracking-tight">FOREX<span className="text-primary">imf</span></h1>
+        <p className="text-gray-400 text-[9px] tracking-[0.3em] font-bold uppercase mt-1">TRADING LIKE A PRO</p>
       </div>
 
       {/* Tabs */}
       <AuthTabs />
 
-      <h2 className="text-white text-sm font-medium mb-4">Register New Member</h2>
+      <h2 className="text-gray-300 text-sm font-medium mb-4 text-center">Register New Member</h2>
 
       {(errors.api || error) && (
         <div className="bg-red-500/20 text-red-400 p-3 rounded text-sm mb-4 text-center border border-red-500/30">
@@ -106,7 +107,7 @@ const RegisterForm: React.FC = () => {
                 type="text"
                 value={sponsor}
                 readOnly
-                className="w-full bg-transparent border border-gray-600 rounded px-3 py-2 text-gray-400 text-sm focus:outline-none cursor-not-allowed opacity-70"
+                className="w-full bg-[#0B0E11]/30 border border-gray-600 rounded px-3 py-2 text-gray-400 text-sm focus:outline-none cursor-not-allowed opacity-70"
             />
         </div>
 
@@ -116,7 +117,7 @@ const RegisterForm: React.FC = () => {
             <input
                 type="text"
                 placeholder="Enter Full Name"
-                className="w-full bg-transparent border border-gray-600 rounded px-3 py-2 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-[#F97316]"
+                className="w-full bg-[#0B0E11]/50 border border-gray-600 rounded px-3 py-2 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-[#F97316]"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
             />
@@ -129,7 +130,7 @@ const RegisterForm: React.FC = () => {
             <div className="flex space-x-2">
                 <div className="w-1/3 relative">
                      <select 
-                        className="w-full bg-transparent border border-gray-600 rounded px-2 py-2 text-white text-sm appearance-none focus:outline-none focus:border-[#F97316]"
+                        className="w-full bg-[#0B0E11]/50 border border-gray-600 rounded px-2 py-2 text-white text-sm appearance-none focus:outline-none focus:border-[#F97316]"
                         value={country}
                         onChange={(e) => setCountry(e.target.value)}
                      >
@@ -145,7 +146,7 @@ const RegisterForm: React.FC = () => {
                     <input
                         type="text"
                         placeholder="8123 4567"
-                        className="w-full bg-transparent border border-gray-600 rounded-r px-3 py-2 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-[#F97316]"
+                        className="w-full bg-[#0B0E11]/50 border border-gray-600 rounded-r px-3 py-2 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-[#F97316]"
                         value={phoneNumber}
                         onChange={(e) => setPhoneNumber(e.target.value)}
                     />
@@ -160,7 +161,7 @@ const RegisterForm: React.FC = () => {
             <input
                 type="email"
                 placeholder="Enter Email Address"
-                className="w-full bg-transparent border border-gray-600 rounded px-3 py-2 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-[#F97316]"
+                className="w-full bg-[#0B0E11]/50 border border-gray-600 rounded px-3 py-2 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-[#F97316]"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
             />
@@ -173,7 +174,7 @@ const RegisterForm: React.FC = () => {
             <input
                 type="text"
                 placeholder="Enter Username"
-                className="w-full bg-transparent border border-gray-600 rounded px-3 py-2 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-[#F97316]"
+                className="w-full bg-[#0B0E11]/50 border border-gray-600 rounded px-3 py-2 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-[#F97316]"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
             />
@@ -186,7 +187,7 @@ const RegisterForm: React.FC = () => {
             <input
                 type="password"
                 placeholder="Enter Password"
-                className="w-full bg-transparent border border-gray-600 rounded px-3 py-2 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-[#F97316]"
+                className="w-full bg-[#0B0E11]/50 border border-gray-600 rounded px-3 py-2 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-[#F97316]"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
             />
@@ -203,7 +204,7 @@ const RegisterForm: React.FC = () => {
                 onChange={(e) => setAgreeTerms(e.target.checked)}
             />
             <label htmlFor="agreeTerms" className="ml-2 text-xs text-gray-400">
-                I agree <span className="text-[#F97316]">Terms and Conditions</span>
+                I agree <span className="text-[#F97316] cursor-pointer hover:underline">Terms and Conditions</span>
             </label>
         </div>
         {errors.agreeTerms && <p className="text-xs text-red-500">{errors.agreeTerms}</p>}
@@ -211,7 +212,7 @@ const RegisterForm: React.FC = () => {
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full py-3 bg-[#F97316] hover:bg-orange-600 text-white font-bold rounded shadow-lg transition duration-200 mt-2"
+          className="w-full py-3 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold rounded-lg shadow-lg shadow-orange-500/20 transition-all duration-200 mt-4 active:scale-95 uppercase tracking-wide text-sm"
         >
           {isLoading ? 'Processing...' : 'Signup Now'}
         </button>

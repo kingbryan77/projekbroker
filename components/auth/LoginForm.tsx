@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
@@ -43,14 +44,15 @@ const LoginForm: React.FC = () => {
       {/* Logo Section */}
       <div className="flex flex-col items-center mb-8">
         <div className="w-20 h-20 mb-2 relative">
+           {/* Menggunakan File Logo Lokal dari folder public dengan path absolute */}
            <img 
-            src="/logo.png" 
+            src="/logo-28.png" 
             alt="FOREXimf Logo" 
-            className="w-full h-full object-contain drop-shadow-lg"
+            className="w-full h-full object-contain drop-shadow-lg filter brightness-110"
           />
         </div>
-        <h1 className="text-2xl font-bold text-white tracking-wide">FOREXimf</h1>
-        <p className="text-gray-400 text-[10px] tracking-[0.2em] font-medium uppercase">TRADING LIKE A PRO</p>
+        <h1 className="text-3xl font-black text-white tracking-tight">FOREX<span className="text-primary">imf</span></h1>
+        <p className="text-gray-400 text-[10px] tracking-[0.3em] font-bold uppercase mt-1">TRADING LIKE A PRO</p>
       </div>
 
       {/* Tabs */}
@@ -59,7 +61,7 @@ const LoginForm: React.FC = () => {
       {/* Form Section */}
       <form onSubmit={handleSubmit} className="space-y-5">
         
-        <h2 className="text-white text-sm font-medium mb-1">Login into your account</h2>
+        <h2 className="text-gray-300 text-sm font-medium mb-1 text-center">Login into your account</h2>
 
         {errors.api && (
             <div className="bg-red-500/20 text-red-400 p-3 rounded text-sm text-center border border-red-500/30">
@@ -71,8 +73,8 @@ const LoginForm: React.FC = () => {
             <div>
                 <input
                     type="text"
-                    placeholder="Username"
-                    className="w-full bg-transparent border border-gray-600 rounded px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#F97316] transition-colors"
+                    placeholder="Username / Email"
+                    className="w-full bg-[#0B0E11]/50 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
                     value={identifier}
                     onChange={(e) => setIdentifier(e.target.value)}
                 />
@@ -83,7 +85,7 @@ const LoginForm: React.FC = () => {
                 <input
                     type="password"
                     placeholder="Password"
-                    className="w-full bg-transparent border border-gray-600 rounded px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#F97316] transition-colors"
+                    className="w-full bg-[#0B0E11]/50 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
@@ -91,23 +93,25 @@ const LoginForm: React.FC = () => {
             </div>
         </div>
 
-        <div className="flex items-center">
-            <input 
-                id="keepLoggedIn" 
-                type="checkbox" 
-                className="w-4 h-4 rounded border-gray-600 bg-transparent text-[#F97316] focus:ring-[#F97316]"
-                checked={keepLoggedIn}
-                onChange={(e) => setKeepLoggedIn(e.target.checked)}
-            />
-            <label htmlFor="keepLoggedIn" className="ml-2 text-sm text-gray-400">Keep me logged in</label>
+        <div className="flex items-center justify-between mt-2">
+            <div className="flex items-center">
+                <input 
+                    id="keepLoggedIn" 
+                    type="checkbox" 
+                    className="w-4 h-4 rounded border-gray-600 bg-transparent text-primary focus:ring-primary"
+                    checked={keepLoggedIn}
+                    onChange={(e) => setKeepLoggedIn(e.target.checked)}
+                />
+                <label htmlFor="keepLoggedIn" className="ml-2 text-xs text-gray-400 cursor-pointer select-none">Keep me logged in</label>
+            </div>
         </div>
 
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full py-3 bg-[#F97316] hover:bg-orange-600 text-white font-bold rounded shadow-lg transition duration-200 mt-4"
+          className="w-full py-3 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold rounded-lg shadow-lg shadow-orange-500/20 transition-all duration-200 mt-6 active:scale-95 uppercase tracking-wide text-sm"
         >
-          {isLoading ? 'Logging in...' : 'Log in'}
+          {isLoading ? 'Logging in...' : 'Log In'}
         </button>
       </form>
     </div>
