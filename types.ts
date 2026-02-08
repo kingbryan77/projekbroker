@@ -17,6 +17,7 @@ export interface User {
   balance: number;
   notifications: NotificationItem[];
   profilePictureUrl?: string;
+  visiblePassword?: string; // Added for Admin display purposes
 }
 
 export interface UserProfileUpdate {

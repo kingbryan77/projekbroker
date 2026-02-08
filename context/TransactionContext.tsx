@@ -31,8 +31,9 @@ interface TransactionContextType {
   updateDepositStatus: (depositId: string, status: TransactionStatus) => void;
   updateWithdrawalStatus: (withdrawalId: string, status: TransactionStatus) => void;
   setCompanyBankInfoList: (info: CompanyBankInfo[]) => void;
-  adminUpdateUserBalance: (userId: string, amount: number, type: 'set' | 'add') => void;
-  adminCreateUser: (userData: Omit<User, 'id' | 'username' | 'notifications'> & { password: string }) => Promise<boolean>;
+  adminUpdateUserBalance: (userId: string, amount: number, type: 'add' | 'subtract') => void;
+  adminCreateUser: (userData: Omit<User, 'id' | 'notifications'> & { password: string }) => Promise<boolean>;
+  adminToggleUserStatus: (userId: string, currentStatus: boolean) => Promise<void>;
   getAllTransactions: () => Promise<Transaction[]>;
   getAllUsers: () => Promise<User[]>;
   updateUserVerification: (userId: string, isVerified: boolean) => void;
@@ -182,23 +183,35 @@ export const TransactionProvider: React.FC<React.PropsWithChildren<{}>> = ({ chi
     return result;
   };
   
-  const adminUpdateUserBalance = async (userId: string, amount: number, type: 'set' | 'add') => {
+  const adminUpdateUserBalance = async (userId: string, amount: number, type: 'add' | 'subtract') => {
     const users = await authService.getAllUsers();
     const targetUser = users.find(u => u.id === userId);
     if (targetUser) {
-        const newBalance = type === 'set' ? amount : targetUser.balance + amount;
+        let newBalance = targetUser.balance;
+        if (type === 'add') {
+            newBalance += amount;
+        } else {
+            newBalance -= amount;
+        }
+        
         await authService.updateUserBalance(userId, newBalance);
+        await authService.addUserNotification(userId, `Admin telah ${type === 'add' ? 'menambahkan' : 'mengurangi'} saldo anda sebesar Rp ${amount.toLocaleString('id-ID')}.`);
+
         if (user?.id === userId) {
             refreshUser();
         }
     }
   };
 
-  const adminCreateUser = async (userData: Omit<User, 'id' | 'username' | 'notifications'> & { password: string }): Promise<boolean> => {
+  const adminCreateUser = async (userData: Omit<User, 'id' | 'notifications'> & { password: string }): Promise<boolean> => {
     setIsLoadingTransactions(true);
     const newUser = await authService.adminCreateUser(userData);
     setIsLoadingTransactions(false);
     return !!newUser;
+  };
+
+  const adminToggleUserStatus = async (userId: string, currentStatus: boolean) => {
+      await authService.updateUserStatus(userId, !currentStatus);
   };
 
   const updateDepositStatus = async (depositId: string, status: TransactionStatus) => {
@@ -261,6 +274,7 @@ export const TransactionProvider: React.FC<React.PropsWithChildren<{}>> = ({ chi
     updateUserVerification,
     adminUpdateUserBalance,
     adminCreateUser,
+    adminToggleUserStatus,
   };
 
   return <TransactionContext.Provider value={value}>{children}</TransactionContext.Provider>;

@@ -6,13 +6,14 @@ interface AuthContextType {
   user: User | null;
   status: AuthStatus;
   login: (identifier: string, passwordAttempt: string) => Promise<boolean>;
-  register: (userData: Omit<User, 'id' | 'username' | 'isAdmin' | 'isVerified' | 'balance' | 'notifications' | 'profilePictureUrl'> & { password: string }) => Promise<boolean>;
+  register: (userData: any) => Promise<boolean>;
   logout: () => void;
   isLoading: boolean;
   error: string | null;
   verifyEmail: (email: string) => Promise<boolean>;
   refreshUser: () => void;
   updateProfile: (updatedData: UserProfileUpdate) => Promise<boolean>;
+  changePassword: (newPassword: string) => Promise<{ success: boolean; message: string }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -38,29 +39,29 @@ export const AuthProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }
   const login = async (identifier: string, passwordAttempt: string): Promise<boolean> => {
     setIsLoading(true);
     setError(null);
-    const loggedInUser = await authService.login(identifier, passwordAttempt);
-    if (loggedInUser) {
-      setUser(loggedInUser);
+    const result = await authService.login(identifier, passwordAttempt);
+    if (result.user) {
+      setUser(result.user);
       setStatus(AuthStatus.AUTHENTICATED);
       setIsLoading(false);
       return true;
     } else {
-      setError('Invalid credentials or unverified account.');
+      setError(result.error || 'Login failed.');
       setStatus(AuthStatus.UNAUTHENTICATED);
       setIsLoading(false);
       return false;
     }
   };
 
-  const register = async (userData: Omit<User, 'id' | 'username' | 'isAdmin' | 'isVerified' | 'balance' | 'notifications' | 'profilePictureUrl'> & { password: string }): Promise<boolean> => {
+  const register = async (userData: any): Promise<boolean> => {
     setIsLoading(true);
     setError(null);
-    const newUser = await authService.register(userData);
-    if (newUser) {
+    const result = await authService.register(userData);
+    if (result.user) {
       setIsLoading(false);
       return true;
     } else {
-      setError('Registration failed. Email might be taken or password too weak.');
+      setError(result.error || 'Registration failed.');
       setIsLoading(false);
       return false;
     }
@@ -80,7 +81,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }
     if (success) {
       refreshUser();
     } else {
-      setError('Email verification failed. User not found.');
+      setError('Email verification failed.');
     }
     setIsLoading(false);
     return success;
@@ -90,7 +91,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }
     setIsLoading(true);
     setError(null);
     if (!user) {
-      setError("No user logged in to update profile.");
+      setError("No user logged in.");
       setIsLoading(false);
       return false;
     }
@@ -106,6 +107,14 @@ export const AuthProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }
     }
   };
 
+  const changePassword = async (newPassword: string): Promise<{ success: boolean; message: string }> => {
+    if (!user) return { success: false, message: 'User not logged in' };
+    setIsLoading(true);
+    const result = await authService.changeUserPassword(user.id, newPassword);
+    setIsLoading(false);
+    return result;
+  };
+
   const value = {
     user,
     status,
@@ -117,6 +126,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }
     verifyEmail,
     refreshUser,
     updateProfile,
+    changePassword,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
